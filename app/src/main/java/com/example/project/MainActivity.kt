@@ -52,6 +52,7 @@ fun SejwyScreen() {
     var newImie2 by remember { mutableStateOf("") }
     var newNazwa by remember { mutableStateOf("") }
     var isAddingNewSejw by remember { mutableStateOf(false) }
+    var isSettingsVisible by remember { mutableStateOf(false) }
 
     val sejwyList = remember { mutableStateListOf<Sejw>() }
 
@@ -62,14 +63,14 @@ fun SejwyScreen() {
             .padding(16.dp)
     ) {
         // Przycisk do dodawania nowej konwersacji
-        if (!isAddingNewSejw) {
+        if (!isAddingNewSejw && selectedSejw == null && !isSettingsVisible) {
             Button(
                 onClick = {
                     isAddingNewSejw = true
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(50.dp)
+                    .padding(bottom = 16.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +81,7 @@ fun SejwyScreen() {
             }
         }
 
-        // Nowa konwersacja - wyświetlana tylko gdy isAddingNewSejw jest true
+        // Nowa konwersacja
         if (isAddingNewSejw) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -159,32 +160,102 @@ fun SejwyScreen() {
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Card(
+        // "Ekran" dwa
+        if (selectedSejw != null && !isAddingNewSejw && !isSettingsVisible) {
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp),
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-                LazyColumn(
+                Row(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(sejwyList) { sejw ->
-                        SejwItem(
-                            sejw = sejw,
-                            onClick = { selectedSejw = sejw }
-                        )
+                    Button(
+                        onClick = {
+                            selectedSejw = null
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text("Wróć")
+                    }
+
+                    Button(
+                        onClick = {
+                            isSettingsVisible = true
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text("Ustawienia")
+                    }
+                }
+                Text("Kiedyś będzie tu więcej i mądrzej :(")
+            }
+        } else if (isSettingsVisible) {
+            //ekranik trzy
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            isSettingsVisible = false
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text("Wróć")
+                    }
+                }
+                Text("Kiedyś będzie tu więcej i mądrzej :(((")
+            }
+        } else {
+            //sejwy aka lisa
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        items(sejwyList) { sejw ->
+                            SejwItem(
+                                sejw = sejw,
+                                onClick = {
+                                    selectedSejw = sejw
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-
-        }
     }
+}
+
+
+
+
 
 
 @Composable
