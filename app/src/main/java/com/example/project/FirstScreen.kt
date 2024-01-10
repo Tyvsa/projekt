@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.project.ui.theme.ProjectTheme
 
 // Dodana klasa do przechowywania danych sejwów
@@ -32,7 +33,9 @@ data class Sejw(val imie1: String, val imie2: String, val nazwa: String)
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SejwyScreen() {
+fun SejwyScreen(
+    navController: NavHostController,
+) {
     var selectedSejw by remember { mutableStateOf<Sejw?>(null) }
     var newImie1 by remember { mutableStateOf("") }
     var newImie2 by remember { mutableStateOf("") }
@@ -167,7 +170,7 @@ fun SejwyScreen() {
                             SejwItem(
                                 sejw = sejw,
                                 onClick = {
-                                    selectedSejw = sejw
+                                    navController.navigate(ProjectScreen.Second.name)
                                 }
                             )
                         }
@@ -203,10 +206,3 @@ fun SejwItem(sejw: Sejw, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SejwyListPreview() {
-    ProjectTheme {
-        SejwyScreen()
-    }
-}

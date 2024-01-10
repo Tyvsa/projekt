@@ -33,21 +33,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ProjectTheme {
-                val navController = rememberNavController()
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost(navController, startDestination = "sejwyScreen") {
-                        composable("sejwyScreen") {
-                            SejwyScreen(navController)
-                        }
-                        composable("secondScreen") {
-
-                        }
-                    }
+                    ProjectApp()
+                }
             }
         }
     }
-
+}
