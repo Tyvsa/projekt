@@ -22,6 +22,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.project.ui.theme.ProjectTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,15 +33,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ProjectTheme {
-                // A surface container using the 'background' color from the theme
+                val navController = rememberNavController()
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SejwyScreen()
-                }
+                    NavHost(navController, startDestination = "sejwyScreen") {
+                        composable("sejwyScreen") {
+                            SejwyScreen(navController)
+                        }
+                        composable("secondScreen") {
+
+                        }
+                    }
             }
         }
     }
-}
 

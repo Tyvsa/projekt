@@ -2,16 +2,7 @@ package com.example.project
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -156,73 +147,6 @@ fun SejwyScreen() {
                     }
                 }
             }
-        }
-
-        // "Ekran" dwa
-        if (selectedSejw != null && !isAddingNewSejw && !isSettingsVisible) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            selectedSejw = null
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text("Wróć")
-                    }
-
-                    Button(
-                        onClick = {
-                            isSettingsVisible = true
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text("Ustawienia")
-                    }
-                }
-                Text("Kiedyś będzie tu więcej i mądrzej :(")
-            }
-        } else if (isSettingsVisible) {
-            //ekranik trzy
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            isSettingsVisible = false
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text("Wróć")
-                    }
-                }
-                Text("Kiedyś będzie tu więcej i mądrzej :(((")
-            }
         } else {
             //sejwy aka lisa
             Box(
@@ -254,11 +178,6 @@ fun SejwyScreen() {
     }
 }
 
-
-
-
-
-
 @Composable
 fun SejwItem(sejw: Sejw, onClick: () -> Unit) {
     Row(
@@ -283,7 +202,6 @@ fun SejwItem(sejw: Sejw, onClick: () -> Unit) {
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
