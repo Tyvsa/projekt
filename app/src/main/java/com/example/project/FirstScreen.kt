@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.ui.theme.ProjectTheme
 
-// Dodana klasa do przechowywania danych sejwów
 data class Sejw(val imie1: String, val imie2: String, val nazwa: String)
 
 @Composable
@@ -205,4 +204,3 @@ fun SejwItem(sejw: Sejw, onClick: () -> Unit) {
         )
     }
 }
-
