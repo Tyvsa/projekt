@@ -35,12 +35,10 @@ fun SejwyScreen(
     var newImie2 by remember { mutableStateOf("") }
     var newNazwa by remember { mutableStateOf("") }
 
-    // Użyj danych z ViewModela
+
     val sejwyList by viewModel.konwersacjeList.collectAsState(initial = emptyList())
 
-    val sejwyListMapped: List<Sejw> = sejwyList.map { konwersacje ->
-        Sejw(imie1 = konwersacje.imie1, imie2 = konwersacje.imie2, nazwa = konwersacje.nazwa)
-    }
+
 
     Column(
         modifier = Modifier
