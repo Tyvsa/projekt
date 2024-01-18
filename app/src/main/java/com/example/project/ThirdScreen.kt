@@ -122,7 +122,17 @@ fun UstawieniaScreen(
             ),
         )
 
-
+        Button(
+            onClick = {
+                // przycisk do usuwania
+            },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text("Usuń")
+        }
 
         Button(
             onClick = {
