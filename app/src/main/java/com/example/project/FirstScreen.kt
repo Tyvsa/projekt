@@ -13,12 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -26,7 +21,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.project.ui.theme.ProjectTheme
 
 data class Sejw(val imie1: String, val imie2: String, val nazwa: String)
 
@@ -34,15 +28,19 @@ data class Sejw(val imie1: String, val imie2: String, val nazwa: String)
 @OptIn(ExperimentalMaterial3Api::class)
 fun SejwyScreen(
     navController: NavHostController,
+    viewModel: ProjectViewModel
 ) {
-    var selectedSejw by remember { mutableStateOf<Sejw?>(null) }
+    var isAddingNewSejw by remember { mutableStateOf(false) }
     var newImie1 by remember { mutableStateOf("") }
     var newImie2 by remember { mutableStateOf("") }
     var newNazwa by remember { mutableStateOf("") }
-    var isAddingNewSejw by remember { mutableStateOf(false) }
-    var isSettingsVisible by remember { mutableStateOf(false) }
 
-    val sejwyList = remember { mutableStateListOf<Sejw>() }
+    // Użyj danych z ViewModela
+    val sejwyList by viewModel.konwersacjeList.collectAsState(initial = emptyList())
+
+    val sejwyListMapped: List<Sejw> = sejwyList.map { konwersacje ->
+        Sejw(imie1 = konwersacje.imie1, imie2 = konwersacje.imie2, nazwa = konwersacje.nazwa)
+    }
 
     Column(
         modifier = Modifier
@@ -51,7 +49,7 @@ fun SejwyScreen(
             .padding(16.dp)
     ) {
         // Przycisk do dodawania nowej konwersacji
-        if (!isAddingNewSejw && selectedSejw == null && !isSettingsVisible) {
+        if (!isAddingNewSejw) {
             Button(
                 onClick = {
                     isAddingNewSejw = true
@@ -133,7 +131,7 @@ fun SejwyScreen(
 
                 Button(
                     onClick = {
-                        sejwyList.add(Sejw(newImie1, newImie2, newNazwa))
+                        viewModel.insertKonwersacje(Konwersacje(imie1 = newImie1, imie2 = newImie2, nazwa = newNazwa))
                         newImie1 = ""
                         newImie2 = ""
                         newNazwa = ""
@@ -165,9 +163,9 @@ fun SejwyScreen(
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        items(sejwyList) { sejw ->
+                        items(sejwyList) { konwersacje ->
                             SejwItem(
-                                sejw = sejw,
+                                sejw = Sejw(imie1 = konwersacje.imie1, imie2 = konwersacje.imie2, nazwa = konwersacje.nazwa),
                                 onClick = {
                                     navController.navigate(ProjectScreen.Second.name)
                                 }

@@ -9,18 +9,20 @@ import androidx.room.RoomDatabase
 abstract class KonwersacjeDatabase : RoomDatabase() {
     abstract fun KonwersacjeDAO(): KonwersacjeDAO
 
-    companion object {
-        private var db: KonwersacjeDatabase? = null
 
-        fun getInstance(context: Context): KonwersacjeDatabase {
-            if (db == null) {
-                db = Room.databaseBuilder(
-                    context,
-                    KonwersacjeDatabase::class.java,
-                    "konwersacje-database"
-                ).build()
-            }
-            return db!!
+}
+
+object KonwersacjeDb{
+    private var db: KonwersacjeDatabase? = null
+
+    fun getInstance(context: Context): KonwersacjeDatabase {
+        if (db == null) {
+            db = Room.databaseBuilder(
+                context,
+                KonwersacjeDatabase::class.java,
+                "konwersacje-database"
+            ).build()
         }
+        return db!!
     }
 }
