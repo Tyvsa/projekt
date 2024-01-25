@@ -1,5 +1,6 @@
 package com.example.project
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +48,7 @@ fun SejwyScreen(
     var newImie2 by remember { mutableStateOf("") }
     var newNazwa by remember { mutableStateOf("") }
 
+    val selectedValue by viewModel.selectedValue.collectAsState()
     val sejwyList by viewModel.konwersacjeList.collectAsState(initial = emptyList())
 
     Column(
@@ -79,7 +81,8 @@ fun SejwyScreen(
         if (isAddingNewSejw) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(value = newImie1,
+            OutlinedTextField(
+                value = newImie1,
                 onValueChange = { newImie1 = it },
                 label = { Text("Imię postaci 1") },
                 modifier = Modifier
@@ -89,7 +92,8 @@ fun SejwyScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(value = newImie2,
+            OutlinedTextField(
+                value = newImie2,
                 onValueChange = { newImie2 = it },
                 label = { Text("Imię postaci 2") },
                 modifier = Modifier
@@ -175,6 +179,11 @@ fun SejwyScreen(
                                 nazwa = konwersacje.nazwa
                             ), onClick = {
                                 navController.navigate(ProjectScreen.Second.name)
+                                viewModel.setSelectedValue(konwersacje.uid)
+                                Log.d(
+                                    "ViewModel",
+                                    "Zapisano wartość w ViewModel: $konwersacje.nazwa"
+                                )
                             })
                         }
                     }

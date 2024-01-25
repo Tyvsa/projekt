@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,19 +27,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.project.Konwersacje
 import com.example.project.ProjectScreen
+import com.example.project.ProjectViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun UstawieniaScreen(
-    navController: NavHostController
+    navController: NavHostController, viewModel: ProjectViewModel
 ) {
-    var text1 by remember { mutableStateOf(TextFieldValue("")) }
-    var text2 by remember { mutableStateOf(TextFieldValue("")) }
-    var text3 by remember { mutableStateOf(TextFieldValue("")) }
+    var newImie1 by remember { mutableStateOf("") }
+    var newImie2 by remember { mutableStateOf("") }
+    var newNazwa by remember { mutableStateOf("") }
+
+    val selectedValue by viewModel.selectedValue.collectAsState()
+
+    Log.d("Prosze", "Selected Value: $selectedValue")
 
     Column(
         modifier = Modifier
@@ -69,6 +76,17 @@ fun UstawieniaScreen(
 
             Button(
                 onClick = {
+                    viewModel.updateKonwersacje(
+                        Konwersacje(
+                            uid = selectedValue,
+                            imie1 = newImie1,
+                            imie2 = newImie2,
+                            nazwa = newNazwa
+                        )
+                    )
+                    newImie1 = ""
+                    newImie2 = ""
+                    newNazwa = ""
                     navController.navigate(ProjectScreen.Second.name)
                 },
                 shape = RoundedCornerShape(8.dp)
@@ -84,47 +102,46 @@ fun UstawieniaScreen(
         }
 
         TextField(
-            value = text1,
-            onValueChange = { text1 = it },
-            label = { Text("Tytuł Konwersacji") },
+            value = newNazwa,
+            onValueChange = { newNazwa = it },
+            label = { Text("Nazwa zapisu") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Text
+                imeAction = ImeAction.Done, keyboardType = KeyboardType.Text
             ),
         )
 
         TextField(
-            value = text2,
-            onValueChange = { text2 = it },
-            label = { Text("Imie 1") },
+            value = newImie1,
+            onValueChange = { newImie1 = it },
+            label = { Text("Imię postaci 1") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Text
-            ),
+                .padding(8.dp)
         )
 
         TextField(
-            value = text3,
-            onValueChange = { text3 = it },
-            label = { Text("Imie 2") },
+            value = newImie2,
+            onValueChange = { newImie2 = it },
+            label = { Text("Imię postaci 2") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Text
-            ),
+                .padding(8.dp)
         )
 
         Button(
             onClick = {
-                // przycisk do usuwania
+                viewModel.deleteKonwersacje(
+                    Konwersacje(
+                        uid = selectedValue,
+                        imie1 = newImie1,
+                        imie2 = newImie2,
+                        nazwa = newNazwa
+                    )
+                )
+                navController.navigate(ProjectScreen.First.name)
             },
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
