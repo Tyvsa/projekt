@@ -33,6 +33,13 @@ class ProjectViewModel(private val repository: KonwersacjeRepository) : ViewMode
         }
     }
 
+    fun getKonwersacje(uid: Long) {
+        viewModelScope.launch {
+            repository.getById(uid)
+        }
+    }
+
+
     fun updateKonwersacje(konwersacje: Konwersacje) {
         viewModelScope.launch {
             repository.update(konwersacje)
@@ -87,7 +94,7 @@ fun ProjectApp() {
             SejwyScreen(navController, viewModel)
         }
         composable(route = ProjectScreen.Second.name) {
-            KonwersacjeScreen(navController)
+            KonwersacjeScreen(navController, viewModel)
         }
         composable(route = ProjectScreen.Third.name) {
             UstawieniaScreen(navController, viewModel)

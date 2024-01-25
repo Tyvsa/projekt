@@ -9,5 +9,5 @@ data class Konwersacje(
     val uid: Long = 0,
     val imie1: String,
     val imie2: String,
-    val nazwa: String
+    val nazwa: String,
 )

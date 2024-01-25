@@ -8,8 +8,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface KonwersacjeDAO
-{
+interface KonwersacjeDAO {
     @Insert
     suspend fun insertAll(konwersacje: List<Konwersacje>)
 
@@ -17,11 +16,15 @@ interface KonwersacjeDAO
     suspend fun delete(konwersacje: List<Konwersacje>)
 
     @Update
-    suspend fun update (konwersacje: Konwersacje)
+    suspend fun update(konwersacje: Konwersacje)
 
     @Query("SELECT * FROM konwersacje_table")
     fun getAll(): Flow<List<Konwersacje>>
 
     @Query("DELETE FROM konwersacje_table")
     suspend fun dropDatabase()
+
+    @Query("SELECT * FROM konwersacje_table WHERE uid = :uid LIMIT 1")
+    fun getById(uid: Long): Flow<Konwersacje?>
+    
 }

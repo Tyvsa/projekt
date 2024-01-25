@@ -23,5 +23,10 @@ class KonwersacjeRepository(private val konwersacjeDao: KonwersacjeDAO) {
     suspend fun dropDatabase() {
         konwersacjeDao.dropDatabase()
     }
+
+    fun getById(uid: Long) {
+        konwersacjeDao.getById(uid)
+    }
+
 }
 
