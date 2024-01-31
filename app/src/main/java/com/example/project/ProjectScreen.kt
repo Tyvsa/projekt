@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 
@@ -20,6 +21,9 @@ class ProjectViewModel(private val repository: KonwersacjeRepository) : ViewMode
 
     val konwersacjeList: Flow<List<Konwersacje>> = repository.getAll()
     val selectedValue = MutableStateFlow(0L)
+    val konwersacjeRelationList = repository.getAllListy().combine(selectedValue) { listy, id ->
+        listy.find { it.konwersacje.uid == id }
+    }
 
     fun insertKonwersacje(konwersacje: Konwersacje) {
         viewModelScope.launch {
@@ -53,6 +57,23 @@ class ProjectViewModel(private val repository: KonwersacjeRepository) : ViewMode
         selectedValue.value = value
     }
 
+    fun getAllListy(): Flow<List<KonwersacjeRelation>> {
+
+        return repository.getAllListy()
+    }
+
+    fun insertlista1(value: List<lista1>) {
+        viewModelScope.launch {
+            repository.insertlista1(value)
+        }
+    }
+
+    fun insertlista2(value: List<lista2>) {
+        viewModelScope.launch {
+            repository.insertlista2(value)
+        }
+    }
+
 }
 
 class ProjectViewModelFactory(private val repository: KonwersacjeRepository) :
@@ -79,7 +100,7 @@ fun ProjectApp() {
     val navController = rememberNavController()
 
     val database = KonwersacjeDb.getInstance(LocalContext.current)
-    val repository = KonwersacjeRepository(database.KonwersacjeDAO())
+    val repository = KonwersacjeRepository(database.KonwersacjeDAO(), database.ListyDAO())
 
     val viewModel: ProjectViewModel = viewModel(
         factory = ProjectViewModelFactory(repository),

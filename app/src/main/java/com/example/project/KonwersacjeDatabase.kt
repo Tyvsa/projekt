@@ -5,14 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Konwersacje::class], version = 1)
+@Database(entities = [Konwersacje::class, lista1::class, lista2::class], version = 1)
 abstract class KonwersacjeDatabase : RoomDatabase() {
     abstract fun KonwersacjeDAO(): KonwersacjeDAO
+    abstract fun ListyDAO(): ListyDAO
 
 
 }
 
-object KonwersacjeDb{
+object KonwersacjeDb {
     private var db: KonwersacjeDatabase? = null
 
     fun getInstance(context: Context): KonwersacjeDatabase {

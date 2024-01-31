@@ -10,4 +10,5 @@ data class Konwersacje(
     val imie1: String,
     val imie2: String,
     val nazwa: String,
-)
+
+    )

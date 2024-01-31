@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.project.ProjectScreen
 import com.example.project.ProjectViewModel
+import com.example.project.lista1
+import com.example.project.lista2
 
 
 @Composable
@@ -48,19 +50,31 @@ fun KonwersacjeScreen(
     viewModel: ProjectViewModel
 ) {
     var messageText by remember { mutableStateOf("") }
-    var leftConversationList by remember { mutableStateOf<List<String>>(emptyList()) }
-    var rightConversationList by remember { mutableStateOf<List<String>>(emptyList()) }
+
+
+    val listy by remember { viewModel.konwersacjeRelationList }
+        .collectAsState(initial = null)
+
+    var leftConversationList by remember {
+        mutableStateOf<List<String>>(listy?.list1?.map { it.tresc } ?: emptyList())
+    }
+    var rightConversationList by remember {
+        mutableStateOf<List<String>>(listy?.list2?.map { it.tresc } ?: emptyList())
+    }
 
     val selectedValue by viewModel.selectedValue.collectAsState()
 
     val imiona by remember { viewModel.konwersacjeList }
         .collectAsState(initial = emptyList())
 
+
     val selectedImiona = imiona.firstOrNull { it.uid == selectedValue }
 
     val imie1 = selectedImiona?.imie1 ?: ""
     val imie2 = selectedImiona?.imie2 ?: ""
 
+    leftConversationList = listy?.list1?.map { it.tresc } ?: emptyList()
+    rightConversationList = listy?.list2?.map { it.tresc } ?: emptyList()
 
 
     Column(
@@ -114,10 +128,9 @@ fun KonwersacjeScreen(
                 .weight(0.6f)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
-                // Left Conversation List
+                // Wyświetlanie lewej
                 Card(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,8 +138,7 @@ fun KonwersacjeScreen(
                         .weight(1f)
                 ) {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         items(leftConversationList) { message ->
                             Text(text = message, modifier = Modifier.padding(16.dp))
@@ -134,7 +146,7 @@ fun KonwersacjeScreen(
                     }
                 }
 
-                // Right Conversation List
+                // Wyświetlanie prawej
                 Card(
                     modifier = Modifier
                         .fillMaxSize()
@@ -142,8 +154,7 @@ fun KonwersacjeScreen(
                         .weight(1f)
                 ) {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         items(rightConversationList) { message ->
                             Text(text = message, modifier = Modifier.padding(16.dp))
@@ -167,6 +178,23 @@ fun KonwersacjeScreen(
                             messageText = ""
                             val spaces = " ".repeat(messageText.length)
                             rightConversationList = rightConversationList + spaces
+                            val lastMessage = leftConversationList.lastOrNull() ?: ""
+                            viewModel.insertlista1(
+                                listOf(
+                                    lista1(
+                                        konwersacjaid = selectedValue.toInt(),
+                                        tresc = lastMessage
+                                    )
+                                )
+                            )
+                            viewModel.insertlista2(
+                                listOf(
+                                    lista2(
+                                        konwersacjaid = selectedValue.toInt(),
+                                        tresc = spaces
+                                    )
+                                )
+                            )
                         }
                     },
                     shape = RoundedCornerShape(8.dp)
@@ -181,6 +209,23 @@ fun KonwersacjeScreen(
                             messageText = ""
                             val spaces = " ".repeat(messageText.length)
                             leftConversationList = leftConversationList + spaces
+                            val lastMessage = rightConversationList.lastOrNull() ?: ""
+                            viewModel.insertlista2(
+                                listOf(
+                                    lista2(
+                                        konwersacjaid = selectedValue.toInt(),
+                                        tresc = lastMessage
+                                    )
+                                )
+                            )
+                            viewModel.insertlista1(
+                                listOf(
+                                    lista1(
+                                        konwersacjaid = selectedValue.toInt(),
+                                        tresc = spaces
+                                    )
+                                )
+                            )
                         }
                     },
                     shape = RoundedCornerShape(8.dp)
@@ -219,8 +264,6 @@ fun KonwersacjeScreen(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             if (messageText.isNotBlank()) {
-                                // Add logic for determining which list to update based on user action
-                                // For now, let's assume it always goes to the left list
                                 leftConversationList = leftConversationList + messageText
                                 messageText = ""
                             }
@@ -233,3 +276,4 @@ fun KonwersacjeScreen(
 
     }
 }
+
