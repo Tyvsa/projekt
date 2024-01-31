@@ -1,6 +1,5 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -83,7 +81,6 @@ fun KonwersacjeScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -121,159 +118,157 @@ fun KonwersacjeScreen(
             }
         }
 
-        Box(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .weight(0.6f)
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Wyświetlanie lewej
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                        .weight(1f)
+            item {
+                Row(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                    // Wyświetlanie lewej
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                            .weight(1f)
                     ) {
-                        items(leftConversationList) { message ->
-                            Text(text = message, modifier = Modifier.padding(16.dp))
-                        }
-                    }
-                }
-
-                // Wyświetlanie prawej
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                        .weight(1f)
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(rightConversationList) { message ->
-                            Text(text = message, modifier = Modifier.padding(16.dp))
-                        }
-                    }
-                }
-            }
-        }
-
-        Card {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    onClick = {
-                        if (messageText.isNotBlank()) {
-                            leftConversationList = leftConversationList + messageText
-                            messageText = ""
-                            val spaces = " ".repeat(messageText.length)
-                            rightConversationList = rightConversationList + spaces
-                            val lastMessage = leftConversationList.lastOrNull() ?: ""
-                            viewModel.insertlista1(
-                                listOf(
-                                    lista1(
-                                        konwersacjaid = selectedValue.toInt(),
-                                        tresc = lastMessage
-                                    )
+                        Column(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            leftConversationList.forEach { message ->
+                                Text(
+                                    text = message,
+                                    modifier = Modifier.padding(16.dp)
                                 )
-                            )
-                            viewModel.insertlista2(
-                                listOf(
-                                    lista2(
-                                        konwersacjaid = selectedValue.toInt(),
-                                        tresc = spaces
-                                    )
-                                )
-                            )
-                        }
-                    },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text("$imie1")
-                }
-
-                Button(
-                    onClick = {
-                        if (messageText.isNotBlank()) {
-                            rightConversationList = rightConversationList + messageText
-                            messageText = ""
-                            val spaces = " ".repeat(messageText.length)
-                            leftConversationList = leftConversationList + spaces
-                            val lastMessage = rightConversationList.lastOrNull() ?: ""
-                            viewModel.insertlista2(
-                                listOf(
-                                    lista2(
-                                        konwersacjaid = selectedValue.toInt(),
-                                        tresc = lastMessage
-                                    )
-                                )
-                            )
-                            viewModel.insertlista1(
-                                listOf(
-                                    lista1(
-                                        konwersacjaid = selectedValue.toInt(),
-                                        tresc = spaces
-                                    )
-                                )
-                            )
-                        }
-                    },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text("$imie2")
-                }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = messageText,
-                    onValueChange = { messageText = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Text
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowRight,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    placeholder = { Text("Wpisz wiadomość...") },
-                    singleLine = true,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (messageText.isNotBlank()) {
-                                leftConversationList = leftConversationList + messageText
-                                messageText = ""
                             }
                         }
-                    )
-                )
+                    }
+
+                    // Wyświetlanie prawej
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                            .weight(1f)
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            rightConversationList.forEach { message ->
+                                Text(
+                                    text = message,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 
+        // Przyciski z imionami
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(
+                onClick = {
+                    if (messageText.isNotBlank()) {
+                        leftConversationList = leftConversationList + messageText
+                        messageText = ""
+                        val spaces = " ".repeat(messageText.length)
+                        rightConversationList = rightConversationList + spaces
+                        val lastMessage = leftConversationList.lastOrNull() ?: ""
+                        viewModel.insertlista1(
+                            listOf(
+                                lista1(
+                                    konwersacjaid = selectedValue.toInt(),
+                                    tresc = lastMessage
+                                )
+                            )
+                        )
+                        viewModel.insertlista2(
+                            listOf(
+                                lista2(
+                                    konwersacjaid = selectedValue.toInt(),
+                                    tresc = spaces
+                                )
+                            )
+                        )
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("$imie1")
+            }
 
+            Button(
+                onClick = {
+                    if (messageText.isNotBlank()) {
+                        rightConversationList = rightConversationList + messageText
+                        messageText = ""
+                        val spaces = " ".repeat(messageText.length)
+                        leftConversationList = leftConversationList + spaces
+                        val lastMessage = rightConversationList.lastOrNull() ?: ""
+                        viewModel.insertlista2(
+                            listOf(
+                                lista2(
+                                    konwersacjaid = selectedValue.toInt(),
+                                    tresc = lastMessage
+                                )
+                            )
+                        )
+                        viewModel.insertlista1(
+                            listOf(
+                                lista1(
+                                    konwersacjaid = selectedValue.toInt(),
+                                    tresc = spaces
+                                )
+                            )
+                        )
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("$imie2")
+            }
+        }
+
+        // Pole tekstowe
+        OutlinedTextField(
+            value = messageText,
+            onValueChange = { messageText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Text
+            ),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            placeholder = { Text("Wpisz wiadomość...") },
+            singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (messageText.isNotBlank()) {
+                        leftConversationList = leftConversationList + messageText
+                        messageText = ""
+                    }
+                }
+            )
+        )
     }
 }
-
